@@ -1,0 +1,56 @@
+.TH SIMPLE_SHELL 1 "9 Janvier 2026" "1.0" "Holberton Simple Shell"
+.SH NAME
+simple_shell \- simple UNIX command interpreter
+
+.SH SYNOPSIS
+.B ./hsh
+
+.SH DESCRIPTION
+A minimal shell written in C. It reads user input, parses it, and executes commands using the PATH.
+It supports both interactive and non-interactive modes.
+
+.SH BUILTINS
+.TP
+.B exit
+Exit the shell. If called with an optional numeric argument, it returns that value as the exit status.
+.TP
+.B env
+Display the current environment variables.
+
+.SH USAGE
+The shell supports:
+.IP \- 2
+Interactive mode: Displays a prompt and waits for user input.
+.IP \- 2
+Non-interactive mode: Reads commands from a file or standard input.
+
+.SH EXAMPLES
+Interactive mode:
+.EX
+$ ./simple_shell
+#cisfun$ ls -l
+total 8
+-rw-r--r-- 1 user user 1234 Apr 24 2025 file1
+-rw-r--r-- 1 user user 5678 Apr 24 2025 file2
+#cisfun$ exit
+$
+.EE
+
+Non-interactive mode:
+.EX
+$ echo "ls -l" | ./simple_shell
+total 8
+-rw-r--r-- 1 user user 1234 Apr 24 2025 file1
+-rw-r--r-- 1 user user 5678 Apr 24 2025 file2
+$
+.EE
+
+.SH RETURN VALUE
+.B simple_shell
+returns 0 on success, or an error code if a failure occurs.
+
+.SH BUGS
+No known bugs at this time.
+
+.SH AUTHOR
+Nicolas and Bengin
