@@ -3,14 +3,17 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <string.h>
+#include "shell.h"
 
 /**
 * execute_program - Forks a new process to execute a given program.
 * @command: The path of the program to execute.
+* @environ: It's the global variable
 *
 * Return: 0 on successful execution.
 */
-int execute_program(char *command)
+int execute_program(char *command, char **environ)
 {
 	pid_t pid = fork();
 
@@ -22,11 +25,17 @@ int execute_program(char *command)
 
 	if (pid == 0)
 	{
-		char *args[] = {command, NULL};
+		char *args[2];
 
-		execve(command, args, NULL);
-		perror("command not found");
-		exit(EXIT_FAILURE);
+		args[0] = command;
+		args[1] = NULL;
+
+		if (execve(command, args, environ) == -1)
+		{
+			write(STDERR_FILENO, command, strlen(command));
+			write(STDERR_FILENO, ": not found\n", 12);
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	else
