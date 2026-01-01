@@ -10,17 +10,17 @@
 */
 int main(void)
 {
-	char *command;
+	char *line = read_line();
 	int interactive = isatty(STDIN_FILENO);
+	size_t len = strlen(line);
+	char *clean_up = clean_blank_line(line);
 
 	while (1)
 	{
 		if (interactive)
 			display_prompt();
 
-	command = read_line();
-
-	if (command == NULL)
+	if (line == NULL)
 	{
 		if (interactive)
 		{
@@ -30,17 +30,13 @@ int main(void)
 		break;
 	}
 
-	size_t len = strlen(command);
+	if (len > 0 && line[len - 1] == '\n')
+		line[len - 1] = '\0';
 
-	if (len > 0 && command[len - 1] == '\n')
-		command[len - 1] = '\0';
+	if (clean_up && clean_up[0] != '\0')
+		execute_program(clean_up, environ);
 
-	char *clean_up = clean_blank_line(command);
-
-	if (clean_up[0] != '\0')
-		execute_program(clean_up);
-
-	free(command);
+	free(line);
 	}
 
 	return (0);
