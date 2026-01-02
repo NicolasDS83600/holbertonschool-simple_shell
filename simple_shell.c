@@ -10,33 +10,40 @@
 */
 int main(void)
 {
-	char *line = read_line();
+	char *line, *clean_line;
+	size_t len;
 	int interactive = isatty(STDIN_FILENO);
-	size_t len = strlen(line);
-	char *clean_up = clean_blank_line(line);
+	int line_count = 1;
 
 	while (1)
 	{
 		if (interactive)
 			display_prompt();
 
-	if (line == NULL)
-	{
-		if (interactive)
+		line = read_line();
+
+		if (line == NULL)
 		{
-			write(STDOUT_FILENO, "\n", 1);
+			if (interactive)
+			{
+				write(STDOUT_FILENO, "\n", 1);
+			}
+
+			break;
 		}
 
-		break;
-	}
+		len = strlen(line);
 
-	if (len > 0 && line[len - 1] == '\n')
-		line[len - 1] = '\0';
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
 
-	if (clean_up && clean_up[0] != '\0')
-		execute_program(clean_up, environ);
+		clean_line = trim_line(line);
 
-	free(line);
+		if (clean_line && clean_line[0] != '\0')
+			execute_program(clean_line, environ, "./hsh", line_count);
+
+		free(line);
+		line_count++;
 	}
 
 	return (0);
