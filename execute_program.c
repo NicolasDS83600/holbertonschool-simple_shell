@@ -8,14 +8,17 @@
 
 /**
 * execute_program - Forks a new process to execute a given program.
-* @command: The path of the program to execute.
+* @cmd: The path of the program to execute.
 * @environ: It's the global variable
+* @argv0: Name of the shell program
+* @line_count: Line number of the command
 *
 * Return: 0 on successful execution.
 */
-int execute_program(char *command, char **environ)
+int execute_program(char *cmd, char **environ, char *argv0, int line_count)
 {
 	pid_t pid = fork();
+	int status;
 
 	if (pid < 0)
 	{
@@ -27,19 +30,18 @@ int execute_program(char *command, char **environ)
 	{
 		char *args[2];
 
-		args[0] = command;
+		args[0] = cmd;
 		args[1] = NULL;
 
-		if (execve(command, args, environ) == -1)
+		if (execve(cmd, args, environ) == -1)
 		{
-			write(STDERR_FILENO, command, strlen(command));
-			write(STDERR_FILENO, ": not found\n", 12);
+			fprintf(stderr, "%s: %d: %s: not found\n", argv0, line_count, cmd);
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	else
-		wait(NULL);
+		waitpid(pid, &status, 0);
 
 	return (0);
 }
