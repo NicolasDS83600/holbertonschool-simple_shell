@@ -40,10 +40,11 @@ int main(void)
 		clean_line = trim_line(line);
 
 		if (clean_line && clean_line[0] != '\0')
+		{
 			execute_program(clean_line, environ, "./hsh", line_count);
-
+			line_count++;
+		}
 		free(line);
-		line_count++;
 	}
 
 	return (0);
