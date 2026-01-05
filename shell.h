@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+extern char **environ;
+
 void display_prompt(void);
 char *read_line(void);
-int execute_program(char *command);
-char *clean_blank_line(char *str);
+int execute_program(char *cmd, char **environ, char *argv0, int line_count);
+char *trim_line(char *str);
 
 #endif

@@ -4,11 +4,11 @@
 #include "shell.h"
 
 /**
-* display_prompt - Prints the shell prompt "$ " to the standard output
+* display_prompt - Prints the shell prompt in the standard output
 *                  if the shell is running interactively.
 */
 void display_prompt(void)
 {
-	if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO, "$ ", 2);
+	printf("($) ");
+	fflush(stdout);
 }
