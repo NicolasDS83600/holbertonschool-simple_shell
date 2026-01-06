@@ -78,3 +78,18 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 '''
 
+## Files :
+'''
+	- shell.h : Header file with prototypes and includes
+	- simple_shell.c : Core shell functionality including command processing and execution
+	- split_line.c : Command line parsing functions
+	- trim_line.c : Removes empty spaces and tabs at the beginning and end of lines
+	- read_line.c : Reads a line of input from standard input
+	- display_prompt.c : Prints the shell prompt in the standard output
+	- execute_program.c : Forks a new process to execute a given program
+
+
+## Authors :
+'''
+- Nicolas Da Silva
+- Bengin Uzun
