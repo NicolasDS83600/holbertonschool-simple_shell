@@ -35,7 +35,9 @@ static void handle_line(char *line, int line_count)
 */
 static void shell_loop(int interactive)
 {
-	char *line;
+	char *line, *clean_line;
+	size_t len;
+	int interactive = isatty(STDIN_FILENO);
 	int line_count = 1;
 
 	while (1)
@@ -51,25 +53,24 @@ static void shell_loop(int interactive)
 			{
 				write(STDOUT_FILENO, "\n", 1);
 			}
-				break;
+
+			break;
 		}
 
-		handle_line(line, line_count++);
+		len = strlen(line);
+
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+
+		clean_line = trim_line(line);
+
+		if (clean_line && clean_line[0] != '\0')
+		{
+			execute_program(clean_line, environ, "./hsh", line_count);
+			line_count++;
+		}
 		free(line);
 	}
-}
-
-/**
-* main - Entry point for the simple shell program.
-*
-* Return: 0 on normal exit.
-*/
-int main(void)
-{
-	int interactive;
-
-	interactive = isatty(STDIN_FILENO);
-	shell_loop(interactive);
 
 	return (0);
 }
