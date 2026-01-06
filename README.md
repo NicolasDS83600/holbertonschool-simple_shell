@@ -60,21 +60,12 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 ## Man page :
 '''
-
-
-
-
-
+<img src="image/man._simple_shell.png" width="400">
+<img src="image/man_simple_shell. 2 .png" width="600">
 '''
 
 ## Flowchart :
 '''
-
-
-
-
-
-
 
 '''
 
