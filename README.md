@@ -60,8 +60,8 @@ Features
 
 ## Man page :
 
-<img src="image/man._simple_shell.png" width="400">
-<img src="image/man_simple_shell. 2.png" width="600">
+<img src="image/man_simple_shell.png" width="400">
+<img src="image/man_simple_shell2.png" width="600">
 
 
 ## Flowchart :
