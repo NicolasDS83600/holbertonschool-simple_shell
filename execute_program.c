@@ -22,8 +22,8 @@ int execute_program(char *cmd, char **environ, char *argv0, int line_count)
 
 	if (pid < 0)
 	{
-		perror("fork failed");
-		exit(EXIT_FAILURE);
+		perror(argv0);
+		return (1);
 	}
 
 	if (pid == 0)
