@@ -1,35 +1,32 @@
 #include <ctype.h>
 #include <stddef.h>
+#include <string.h>
 
 /**
 * trim_line - clean the whitespaces and tabs in blank lines
-* @str: string to clean
+* @line: string to clean
 *
 * Return: a pointer to the cleaned string
 */
-char *trim_line(char *str)
+char *trim_line(char *line)
 {
+	char *start = line;
 	char *end;
 
-	if (str == NULL)
+	if (line == NULL)
 		return (NULL);
 
-	while (*str && (*str == ' ' || *str == '\t'))
-		str++;
+	while (*start && (*start == ' ' || *start == '\t' || *start == '\n'))
+		start++;
 
-	if (*str == 0)
-		return (str);
+	if (*start == '\0')
+		return (start);
 
-	end = str;
+	end = start + strlen(start) - 1;
 
-	while (*end)
-		end++;
-	end--;
-
-	while (end > str && (*end == ' ' || *end == '\t'))
+	while (end > start && (*end == ' ' || *end == '\t' || *end == '\n'))
 		end--;
 
 	end[1] = '\0';
-
-	return (str);
+	return (start);
 }
