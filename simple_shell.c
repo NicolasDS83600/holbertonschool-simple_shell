@@ -1,19 +1,20 @@
 #include "shell.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 
-static void shell_loop(int interactive);
-static void handle_line(char *line, int line_count);
+static void handle_line(char *line, int line_count, char *argv0);
+static void shell_loop(int interactive, char *argv0);
 
 /**
 * handle_line - process one command line
 * @line: input line
 * @line_count: command number
+* @argv0: shell program name
 */
-static void handle_line(char *line, int line_count)
+static void handle_line(char *line, int line_count, char *argv0)
 {
-	char *clean_line;
-	char **args;
+	char *clean_line, **args, *cmd_path;
 
 	clean_line = trim_line(line);
 
@@ -25,15 +26,29 @@ static void handle_line(char *line, int line_count)
 	if (args == NULL)
 		return;
 
-	execute_program(args, environ, "./hsh", line_count);
+	cmd_path = find_command(args[0], environ);
+
+	if (cmd_path == NULL)
+	{
+		fprintf(stderr, "%s: %d: %s: not found\n",
+		argv0, line_count, args[0]);
+	}
+
+	else
+	{
+		execute_program(cmd_path, args, environ, argv0, line_count);
+		free(cmd_path);
+	}
+
 	free_args(args);
 }
 
 /**
 * shell_loop - main shell loop
 * @interactive: interactive mode flag
+* @argv0: shell program name
 */
-static void shell_loop(int interactive)
+static void shell_loop(int interactive, char *argv0)
 {
 	char *line;
 	int line_count = 1;
@@ -54,22 +69,25 @@ static void shell_loop(int interactive)
 			break;
 		}
 
-		handle_line(line, line_count++);
+		handle_line(line, line_count++, argv0);
 		free(line);
 	}
 }
 
 /**
 * main - Entry point for the simple shell program.
+* @argc: number of arguments (unused)
+* @argv: array of argument strings
 *
 * Return: 0 on normal exit.
 */
-int main(void)
+int main(int argc, char **argv)
 {
 	int interactive;
 
+	(void)argc;
 	interactive = isatty(STDIN_FILENO);
-	shell_loop(interactive);
+	shell_loop(interactive, argv[0]);
 
 	return (0);
 }
