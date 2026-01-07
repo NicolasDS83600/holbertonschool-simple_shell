@@ -28,7 +28,7 @@ Features
 
 ## Technical requirements and constraints
 
-	
+
 - Allowed editors: vi, vim, emacs
 - All the files will be compiled on Ubuntu 20.04 LTS using gcc, using the options -Wall -Werror -Wextra -pedantic -std=gnu89
 - All the files should end with a new line
@@ -42,7 +42,7 @@ Features
 
 ## List of allowed functions and system calls+
 
-	
+
 - getline (man 3 getline)
 - printf (man 3 printf)
 - execve (man 2 execve)
