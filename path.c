@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 /**
 * get_path - retrieve the PATH environment variable
@@ -33,9 +34,6 @@ static char *build_full_path(char *dir, char *cmd)
 	char *full_path;
 	size_t len;
 
-	if (dir == NULL || cmd == NULL)
-		return (NULL);
-
 	len = strlen(dir) + strlen(cmd) + 2;
 	full_path = malloc(len);
 
@@ -60,16 +58,12 @@ static char *check_absolute_or_relative(char *cmd)
 	if (cmd == NULL)
 		return (NULL);
 
-	if (strchr(cmd, '/'))
-	{
-		if (access(cmd, F_OK) != 0)
-			return (NULL);
+	if (strchr(cmd, '/') == NULL)
+		return (NULL);
 
-		if (access(cmd, X_OK) == 0)
-			return (strdup(cmd));
-
+	if (access(cmd, F_OK) == 0)
 		return (strdup(cmd));
-	}
+
 	return (NULL);
 }
 
@@ -99,12 +93,6 @@ static char *search_in_path(char *cmd, char **env)
 	while (dir)
 	{
 		full_path = build_full_path(dir, cmd);
-
-		if (full_path == NULL)
-		{
-			free(path_copy);
-			return (NULL);
-		}
 
 		if (access(full_path, X_OK) == 0)
 		{
