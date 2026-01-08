@@ -94,7 +94,7 @@ static char *search_in_path(char *cmd, char **env)
 	{
 		full_path = build_full_path(dir, cmd);
 
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
 			return (full_path);
