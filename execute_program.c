@@ -21,6 +21,12 @@ int execute_program(char *cmd_path, char **args, char **env,
 	pid_t pid;
 	int status;
 
+	if (cmd_path == NULL)
+	{
+		fprintf(stderr, "%s: %d: %s: not found\n", argv0, line_count, args[0]);
+			return (127);
+	}
+
 	pid = fork();
 
 	if (pid < 0)
