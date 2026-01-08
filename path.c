@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 /**
 * get_path - retrieve the PATH environment variable
@@ -57,20 +58,21 @@ static char *build_full_path(char *dir, char *cmd)
 */
 static char *check_absolute_or_relative(char *cmd)
 {
+	struct stat st;
+
 	if (cmd == NULL)
 		return (NULL);
 
-	if (strchr(cmd, '/'))
-	{
-		if (access(cmd, F_OK) != 0)
-			return (NULL);
+	if (strchr(cmd, '/') == NULL)
+		return (NULL);
 
-		if (access(cmd, X_OK) == 0)
-			return (strdup(cmd));
+	if (stat(cmd, &st) != 0)
+		return (NULL);
 
-		return (strdup(cmd));
-	}
-	return (NULL);
+	if (access(cmd, F_OK) != 0)
+		return (NULL);
+
+	return (strdup(cmd));
 }
 
 /**
