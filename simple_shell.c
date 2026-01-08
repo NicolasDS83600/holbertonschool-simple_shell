@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void handle_line(char *line, int line_count, char *argv0);
+static int handle_line(char *line, int line_count, char *argv0);
 static void shell_loop(int interactive, char *argv0);
 
 /**
@@ -11,29 +11,47 @@ static void shell_loop(int interactive, char *argv0);
 * @line: input line
 * @line_count: command number
 * @argv0: shell program name
+*
+* Return: 0 if the line was empty or command not found,
+*         otherwise the exit status of the executed command.
 */
-static void handle_line(char *line, int line_count, char *argv0)
+static int handle_line(char *line, int line_count, char *argv0)
 {
-	char *clean_line, **args, *cmd_path;
+	char **args, *cmd_path;
 
-	clean_line = trim_line(line);
+	if (line == NULL)
+		return (0);
 
-	if (clean_line == NULL || clean_line[0] == '\0')
-		return;
+	line = trim_line(line);
 
-	args = split_line(clean_line);
+	if (line[0] == '\0')
+		return (0);
 
-	if (args == NULL)
-		return;
+	args = split_line(line);
+
+	if (args == NULL || args[0] == NULL)
+	{
+		free_args(args);
+		return (0);
+	}
 
 	cmd_path = find_command(args[0], environ);
 
+	if (cmd_path == NULL)
+	{
+		fprintf(stderr, "%s: %d: %s: not found\n",
+			argv0, line_count, args[0]);
+		free_args(args);
+
+		return (1);
+	}
+
 	execute_program(cmd_path, args, environ, argv0, line_count);
 
-	if (cmd_path)
-		free(cmd_path);
-
+	free(cmd_path);
 	free_args(args);
+
+	return (1);
 }
 
 /**
@@ -79,7 +97,7 @@ int main(int argc, char **argv)
 	int interactive;
 
 	(void)argc;
-	interactive = isatty(STDIN_FILENO);
+	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
 	shell_loop(interactive, argv[0]);
 
 	return (0);
