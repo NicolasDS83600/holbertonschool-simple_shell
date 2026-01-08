@@ -62,10 +62,13 @@ static char *check_absolute_or_relative(char *cmd)
 
 	if (strchr(cmd, '/'))
 	{
+		if (access(cmd, F_OK) != 0)
+			return (NULL);
+
 		if (access(cmd, X_OK) == 0)
 			return (strdup(cmd));
 
-		return (NULL);
+		return (strdup(cmd));
 	}
 	return (NULL);
 }
