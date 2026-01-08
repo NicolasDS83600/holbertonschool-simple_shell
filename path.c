@@ -34,9 +34,6 @@ static char *build_full_path(char *dir, char *cmd)
 	char *full_path;
 	size_t len;
 
-	if (dir == NULL || cmd == NULL)
-		return (NULL);
-
 	len = strlen(dir) + strlen(cmd) + 2;
 	full_path = malloc(len);
 
@@ -58,21 +55,16 @@ static char *build_full_path(char *dir, char *cmd)
 */
 static char *check_absolute_or_relative(char *cmd)
 {
-	struct stat st;
-
 	if (cmd == NULL)
 		return (NULL);
 
 	if (strchr(cmd, '/') == NULL)
 		return (NULL);
 
-	if (stat(cmd, &st) != 0)
-		return (NULL);
+	if (access(cmd, F_OK) == 0)
+		return (strdup(cmd));
 
-	if (access(cmd, F_OK) != 0)
-		return (NULL);
-
-	return (strdup(cmd));
+	return (NULL);
 }
 
 /**
@@ -102,13 +94,7 @@ static char *search_in_path(char *cmd, char **env)
 	{
 		full_path = build_full_path(dir, cmd);
 
-		if (full_path == NULL)
-		{
-			free(path_copy);
-			return (NULL);
-		}
-
-		if (access(full_path, X_OK) == 0)
+		if (access(full_path, F_OK) == 0)
 		{
 			free(path_copy);
 			return (full_path);

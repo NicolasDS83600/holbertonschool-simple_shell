@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /**
 * free_partial_args - frees partially allocated args
@@ -56,7 +57,7 @@ static int add_token(char ***args, int *size, int count, char *token)
 */
 char **split_line(char *line)
 {
-	char **args = NULL;
+	char **args;
 	char *copy, *token;
 	int size = 8, count = 0;
 
@@ -78,7 +79,7 @@ char **split_line(char *line)
 
 	token = strtok(copy, " \t\n");
 
-	while (token != NULL)
+	while (token)
 	{
 		if (add_token(&args, &size, count, token) != 0)
 		{
@@ -106,7 +107,7 @@ void free_args(char **args)
 	if (args == NULL)
 		return;
 
-	for (pos = 0; args[pos] != NULL; pos++)
+	for (pos = 0; args[pos]; pos++)
 		free(args[pos]);
 
 	free(args);

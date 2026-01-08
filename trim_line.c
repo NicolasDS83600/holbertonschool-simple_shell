@@ -10,21 +10,25 @@
 */
 char *trim_line(char *line)
 {
-	char *start = line;
-	char *end;
+	char *start, *end;
 
 	if (line == NULL)
 		return (NULL);
 
-	while (*start && (*start == ' ' || *start == '\t' || *start == '\n'))
+	start = line;
+
+	while (*start && isspace((unsigned char)*start))
 		start++;
 
 	if (*start == '\0')
-		return (start);
+	{
+		*line = '\0';
+		return (line);
+	}
 
 	end = start + strlen(start) - 1;
 
-	while (end > start && (*end == ' ' || *end == '\t' || *end == '\n'))
+	while (end > start && isspace((unsigned char)*end))
 		end--;
 
 	end[1] = '\0';
