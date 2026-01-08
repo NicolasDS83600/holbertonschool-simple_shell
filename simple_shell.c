@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int handle_line(char *line, int line_count, char *argv0);
+static void handle_line(char *line, int line_count, char *argv0);
 static void shell_loop(int interactive, char *argv0);
 
 /**
@@ -11,47 +11,33 @@ static void shell_loop(int interactive, char *argv0);
 * @line: input line
 * @line_count: command number
 * @argv0: shell program name
-*
-* Return: 0 if the line was empty or command not found,
-*         otherwise the exit status of the executed command.
 */
-static int handle_line(char *line, int line_count, char *argv0)
+static void handle_line(char *line, int line_count, char *argv0)
 {
 	char **args, *cmd_path;
 
 	if (line == NULL)
-		return (0);
+		return;
 
 	line = trim_line(line);
 
 	if (line[0] == '\0')
-		return (0);
+		return;
 
 	args = split_line(line);
 
 	if (args == NULL || args[0] == NULL)
 	{
 		free_args(args);
-		return (0);
+		return;
 	}
 
 	cmd_path = find_command(args[0], environ);
-
-	if (cmd_path == NULL)
-	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-			argv0, line_count, args[0]);
-		free_args(args);
-
-		return (1);
-	}
 
 	execute_program(cmd_path, args, environ, argv0, line_count);
 
 	free(cmd_path);
 	free_args(args);
-
-	return (1);
 }
 
 /**
