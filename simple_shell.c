@@ -28,17 +28,10 @@ static void handle_line(char *line, int line_count, char *argv0)
 
 	cmd_path = find_command(args[0], environ);
 
-	if (cmd_path == NULL)
-	{
-		fprintf(stderr, "%s: %d: %s: not found\n",
-		argv0, line_count, args[0]);
-	}
+	execute_program(cmd_path, args, environ, argv0, line_count);
 
-	else
-	{
-		execute_program(cmd_path, args, environ, argv0, line_count);
+	if (cmd_path)
 		free(cmd_path);
-	}
 
 	free_args(args);
 }
