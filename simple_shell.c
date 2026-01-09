@@ -60,7 +60,7 @@ static int handle_line(char *line, int line_count, char *argv0)
 static int shell_loop(int interactive, char *argv0)
 {
 	char *line;
-	int line_count = 1, status = 0;
+	int line_count = 1, status = 0, tmp;
 
 	while (1)
 	{
@@ -78,15 +78,15 @@ static int shell_loop(int interactive, char *argv0)
 			break;
 		}
 
-		status = handle_line(line, line_count++, argv0);
-		free(line);
+		tmp = handle_line(line, line_count++, argv0);
 
-		if (status == -2)
-		{
-			status = 0;
+		if (tmp == -2)
 			break;
-		}
+
+		status = tmp;
 	}
+
+	free(line);
 	return (status);
 }
 
