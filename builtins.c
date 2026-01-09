@@ -30,7 +30,7 @@ int builtin_env(char **args)
 	if (args == NULL || args[0] == NULL)
 		return (0);
 
-	if (strcmp(args[0], "env") == 0 && args[1] == NULL)
+	if (strcmp(args[0], "env") == 0)
 		return (1);
 
 	return (0);
