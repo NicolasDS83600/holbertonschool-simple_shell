@@ -38,7 +38,7 @@ static int handle_line(char *line, int line_count, char *argv0)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_args(args);
-		exit(-1);
+		exit(0);
 	}
 
 	cmd_path = find_command(args[0], environ);
