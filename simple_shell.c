@@ -82,9 +82,11 @@ static int shell_loop(int interactive, char *argv0)
 		free(line);
 
 		if (status == -2)
+		{
+			status = 0;
 			break;
+		}
 	}
-
 	return (status);
 }
 
