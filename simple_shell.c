@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int handle_line(char *line, int line_count,
-			char *argv0, int interactive);
+static int handle_line(char *line, int line_count, char *argv0);
 static int shell_loop(int interactive, char *argv0);
 
 /**
@@ -12,12 +11,10 @@ static int shell_loop(int interactive, char *argv0);
 * @line: input line
 * @line_count: command number
 * @argv0: shell program name
-* @interactive: flag mode interactif
 *
 * Return: status
 */
-static int handle_line(char *line, int line_count,
-			char *argv0, int interactive)
+static int handle_line(char *line, int line_count, char *argv0)
 {
 	char **args, *cmd_path;
 	int status = 0;
@@ -38,12 +35,10 @@ static int handle_line(char *line, int line_count,
 		return (0);
 	}
 
-	if (strcmp(args[0], "exit") == 0)
+	if (builtin_exit(args))
 	{
-		status = builtin_exit(args, interactive);
 		free_args(args);
-
-		return (status);
+		return (-2);
 	}
 
 	cmd_path = find_command(args[0], environ);
@@ -83,10 +78,10 @@ static int shell_loop(int interactive, char *argv0)
 			break;
 		}
 
-		status = handle_line(line, line_count++, argv0, interactive);
+		status = handle_line(line, line_count++, argv0);
 		free(line);
 
-		if (status == -1)
+		if (status == -2)
 			break;
 	}
 
