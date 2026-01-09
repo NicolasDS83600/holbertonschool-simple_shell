@@ -3,52 +3,59 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void handle_line(char *line, int line_count, char *argv0);
-static void shell_loop(int interactive, char *argv0);
+static int handle_line(char *line, int line_count, char *argv0);
+static int shell_loop(int interactive, char *argv0);
 
 /**
 * handle_line - process one command line
 * @line: input line
 * @line_count: command number
 * @argv0: shell program name
+*
+* Return: status
 */
-static void handle_line(char *line, int line_count, char *argv0)
+static int handle_line(char *line, int line_count, char *argv0)
 {
 	char **args, *cmd_path;
+	int status = 0;
 
 	if (line == NULL)
-		return;
+		return (0);
 
 	line = trim_line(line);
 
 	if (line[0] == '\0')
-		return;
+		return (0);
 
 	args = split_line(line);
 
 	if (args == NULL || args[0] == NULL)
 	{
 		free_args(args);
-		return;
+		return (0);
 	}
 
 	cmd_path = find_command(args[0], environ);
 
-	execute_program(cmd_path, args, environ, argv0, line_count);
+	status = execute_program(cmd_path, args, environ, argv0, line_count);
 
 	free(cmd_path);
 	free_args(args);
+
+	return (status);
 }
 
 /**
 * shell_loop - main shell loop
 * @interactive: interactive mode flag
 * @argv0: shell program name
+*
+* Return: status
 */
-static void shell_loop(int interactive, char *argv0)
+static int shell_loop(int interactive, char *argv0)
 {
 	char *line;
-	int line_count = 1;
+	int line_count = 1, status = 0;
 
 	while (1)
 	{
@@ -66,9 +73,11 @@ static void shell_loop(int interactive, char *argv0)
 			break;
 		}
 
-		handle_line(line, line_count++, argv0);
+		status = handle_line(line, line_count++, argv0);
 		free(line);
 	}
+
+	return (status);
 }
 
 /**
@@ -80,11 +89,11 @@ static void shell_loop(int interactive, char *argv0)
 */
 int main(int argc, char **argv)
 {
-	int interactive;
+	int interactive, status;
 
 	(void)argc;
 	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
-	shell_loop(interactive, argv[0]);
+	status = shell_loop(interactive, argv[0]);
 
-	return (0);
+	return (status);
 }

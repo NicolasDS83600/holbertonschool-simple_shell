@@ -32,5 +32,9 @@ char *trim_line(char *line)
 		end--;
 
 	end[1] = '\0';
-	return (start);
+
+	if (start != line)
+		memmove(line, start, strlen(start) + 1);
+
+	return (line);
 }
