@@ -9,6 +9,9 @@
 */
 void display_prompt(void)
 {
-	printf("($) ");
-	fflush(stdout);
+	if (isatty(STDIN_FILENO))
+	{
+		printf("($) ");
+		fflush(stdout);
+	}
 }
