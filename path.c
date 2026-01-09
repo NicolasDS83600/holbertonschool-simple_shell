@@ -58,11 +58,14 @@ static char *check_absolute_or_relative(char *cmd)
 	if (cmd == NULL)
 		return (NULL);
 
-	if (strchr(cmd, '/') == NULL)
-		return (NULL);
+	if (strchr(cmd, '/') != NULL)
+	{
+		if (access(cmd, F_OK) != 0)
+			return (NULL);
 
-	if (access(cmd, F_OK) == 0)
 		return (strdup(cmd));
+
+	}
 
 	return (NULL);
 }
