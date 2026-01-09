@@ -43,7 +43,9 @@ static int handle_line(char *line, int line_count, char *argv0)
 
 	if (builtin_env(args))
 	{
-		print_env(environ);
+		if (args[1] == NULL)
+			print_env(environ);
+
 		free_args(args);
 		return (0);
 	}
