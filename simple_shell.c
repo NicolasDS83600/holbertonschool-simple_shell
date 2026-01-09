@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int handle_line(char *line, int line_count, char *argv0);
+static int handle_line(char *line, int line_count,
+			char *argv0, int interactive);
 static int shell_loop(int interactive, char *argv0);
 
 /**
@@ -11,10 +12,12 @@ static int shell_loop(int interactive, char *argv0);
 * @line: input line
 * @line_count: command number
 * @argv0: shell program name
+* @interactive: flag mode interactif
 *
 * Return: status
 */
-static int handle_line(char *line, int line_count, char *argv0)
+static int handle_line(char *line, int line_count,
+			char *argv0, int interactive)
 {
 	char **args, *cmd_path;
 	int status = 0;
@@ -37,12 +40,13 @@ static int handle_line(char *line, int line_count, char *argv0)
 
 	if (strcmp(args[0], "exit") == 0)
 	{
+		status = builtin_exit(args, interactive);
 		free_args(args);
-		exit(0);
+
+		return (status);
 	}
 
 	cmd_path = find_command(args[0], environ);
-
 	status = execute_program(cmd_path, args, environ, argv0, line_count);
 
 	free(cmd_path);
@@ -79,7 +83,7 @@ static int shell_loop(int interactive, char *argv0)
 			break;
 		}
 
-		status = handle_line(line, line_count++, argv0);
+		status = handle_line(line, line_count++, argv0, interactive);
 		free(line);
 
 		if (status == -1)
@@ -104,5 +108,5 @@ int main(int argc, char **argv)
 	interactive = isatty(STDIN_FILENO);
 	status = shell_loop(interactive, argv[0]);
 
-	return (status == -1 ? 0 : status);
+	return (status);
 }
