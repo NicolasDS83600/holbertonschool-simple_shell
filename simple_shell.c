@@ -35,6 +35,12 @@ static int handle_line(char *line, int line_count, char *argv0)
 		return (0);
 	}
 
+	 if (strcmp(args[0], "exit") == 0)
+	{
+		free_args(args);
+		exit(0);
+	}
+
 	cmd_path = find_command(args[0], environ);
 
 	status = execute_program(cmd_path, args, environ, argv0, line_count);
