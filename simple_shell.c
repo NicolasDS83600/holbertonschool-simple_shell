@@ -35,10 +35,11 @@ static int handle_line(char *line, int line_count, char *argv0)
 		return (0);
 	}
 
-	 if (strcmp(args[0], "exit") == 0)
+	if (strcmp(args[0], "exit") == 0)
 	{
 		free_args(args);
-		exit(0);
+		free(line);
+		exit(-1);
 	}
 
 	cmd_path = find_command(args[0], environ);
@@ -81,6 +82,9 @@ static int shell_loop(int interactive, char *argv0)
 
 		status = handle_line(line, line_count++, argv0);
 		free(line);
+
+		if (status == -1)
+			break;
 	}
 
 	return (status);
@@ -101,5 +105,5 @@ int main(int argc, char **argv)
 	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
 	status = shell_loop(interactive, argv[0]);
 
-	return (status);
+	return (status == -1 ? 0 : status);
 }
