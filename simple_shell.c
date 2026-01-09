@@ -38,7 +38,6 @@ static int handle_line(char *line, int line_count, char *argv0)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_args(args);
-		free(line);
 		exit(-1);
 	}
 
@@ -102,7 +101,7 @@ int main(int argc, char **argv)
 	int interactive, status;
 
 	(void)argc;
-	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
+	interactive = isatty(STDIN_FILENO);
 	status = shell_loop(interactive, argv[0]);
 
 	return (status == -1 ? 0 : status);
