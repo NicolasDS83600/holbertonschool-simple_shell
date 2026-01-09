@@ -17,5 +17,7 @@ char **split_line(char *line);
 void free_args(char **args);
 char *find_command(char *cmd, char **env);
 int builtin_exit(char **args);
+int builtin_env(char **args);
+void print_env(char **env);
 
 #endif
