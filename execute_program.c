@@ -17,10 +17,10 @@
 */
 static int check_err(char *cmd_path, char **args, char *argv0, int line_count)
 {
-	if (cmd_path == NULL || args == NULL)
+	if (cmd_path == NULL)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n",
-			argv0, line_count, args ? args[0] : "");
+			argv0, line_count, args[0]);
 		return (127);
 	}
 
@@ -65,26 +65,26 @@ int execute_program(char *cmd_path, char **args, char **env,
 	pid = fork();
 
 	if (pid < 0)
-	{
-		perror(argv0);
 		return (1);
-	}
 
 	if (pid == 0)
 	{
 		execve(cmd_path, args, env);
-		perror(argv0);
 
 		if (errno == EACCES)
+		{
+			fprintf(stderr, "%s: %d: %s: Permission denied\n",
+				argv0, line_count, args[0]);
 			exit(126);
+		}
+
+		fprintf(stderr, "%s: %d: %s: not found\n",
+			argv0, line_count, args[0]);
 		exit(127);
 	}
 
 	if (waitpid(pid, &status, 0) == -1)
-	{
-		perror(argv0);
 		return (1);
-	}
 
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
