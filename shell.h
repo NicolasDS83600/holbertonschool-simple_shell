@@ -16,5 +16,6 @@ char *trim_line(char *line);
 char **split_line(char *line);
 void free_args(char **args);
 char *find_command(char *cmd, char **env);
+int builtin_exit(char **args, int interactive);
 
 #endif
