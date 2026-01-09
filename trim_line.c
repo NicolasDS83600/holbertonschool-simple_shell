@@ -1,4 +1,3 @@
-#include <ctype.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -17,7 +16,7 @@ char *trim_line(char *line)
 
 	start = line;
 
-	while (*start && isspace((unsigned char)*start))
+	while (*start && (*start == ' ' || *start == '\t' || *start == '\n'))
 		start++;
 
 	if (*start == '\0')
@@ -28,7 +27,7 @@ char *trim_line(char *line)
 
 	end = start + strlen(start) - 1;
 
-	while (end > start && isspace((unsigned char)*end))
+	while (end > start && (*end == ' ' || *end == '\t' || *end == '\n'))
 		end--;
 
 	end[1] = '\0';
