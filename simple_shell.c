@@ -90,7 +90,7 @@ static int shell_loop(int interactive, char *argv0)
 		tmp = handle_line(line, line_count++, argv0);
 
 		if (tmp == -2)
-			exit(status);
+			break;
 
 		status = tmp;
 	}
