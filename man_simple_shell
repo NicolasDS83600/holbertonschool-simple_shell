@@ -1,56 +1,127 @@
-.TH SIMPLE_SHELL 1 "9 Janvier 2026" "1.0" "Holberton Simple Shell"
+.TH HSH 1 "9 Janvier 2026" "1.0" "Holberton Simple Shell"
 .SH NAME
-simple_shell \- simple UNIX command interpreter
+hsh \- simple UNIX command interpreter
 
 .SH SYNOPSIS
-.B ./hsh
+.B hsh
 
 .SH DESCRIPTION
-A minimal shell written in C. It reads user input, parses it, and executes commands using the PATH.
+A simple command-line interpreter written in C. It reads commands inputs and executes them.
 It supports both interactive and non-interactive modes.
 
-.SH BUILTINS
+.SH MODES OF OPERATION
+.TP
+.B Interactive mode
+Runs when standard input is connected to a terminal. The shell displays the prompt:
+.PP
+($)
+and waits for user input.
+
+Example:
+.pp
+($) ls -l
+($) echo Hello World
+
+.TP
+.B Non-interactive mode
+Runs when input is redirected or piped into the shell. Commands are executed sequentially without printing a prompt.
+
+Example:
+.PP
+$ echo "ls" | hsh
+$ echo "ls -l" | ./hsh
+
+.SH BUILT-IN IN COMMANDS
 .TP
 .B exit
-Exit the shell. If called with an optional numeric argument, it returns that value as the exit status.
+Exit the shell. This command don't take arguments and returns the exit status of the last executed command.
+
 .TP
 .B env
-Display the current environment variables.
+Display the current environment variables, one per line, in the following format:
+.I name=value.
 
-.SH USAGE
-The shell supports:
-.IP \- 2
-Interactive mode: Displays a prompt and waits for user input.
-.IP \- 2
-Non-interactive mode: Reads commands from a file or standard input.
+.SH COMMAND EXECUTION
+
+The simple command-line interpreter executes commands by the following logic :
+
+.B hsh
+executes commands by first checking if the command contains a '/' character; if so, it is treated as a file path. Otherwise, the shell searches for the executable in the directories listed in the
+.B PATH
+environment variable. When found, the shell creates a new process with
+.B fork (2)
+and runs the command in the child process using
+.B execve (2), 
+while the parent waits for the child to finish with
+.B waitpid (2). 
+The shell stores and returns the exit status of the last executed command.
 
 .SH EXAMPLES
 Interactive mode:
 .EX
-$ ./simple_shell
-#cisfun$ ls -l
-total 8
--rw-r--r-- 1 user user 1234 Apr 24 2025 file1
--rw-r--r-- 1 user user 5678 Apr 24 2025 file2
-#cisfun$ exit
+$ ./hsh
+($) echo "Holberton"
+Holberton
+($) exit
 $
 .EE
 
 Non-interactive mode:
 .EX
-$ echo "ls -l" | ./simple_shell
-total 8
--rw-r--r-- 1 user user 1234 Apr 24 2025 file1
--rw-r--r-- 1 user user 5678 Apr 24 2025 file2
+$ echo "ls" | ./hsh
+file1.txt  file2.txt  script.sh  docs  images
 $
 .EE
 
-.SH RETURN VALUE
-.B simple_shell
-returns 0 on success, or an error code if a failure occurs.
+.SH RETURN VALUES
+.B hsh
+returns the exit status of the last command executed.
 
-.SH BUGS
-No known bugs at this time.
+The following exit codes are used:
+.TP
+.B 0
+Successful execution.
+.TP
+.B 1
+General error.
+.TP
+.B 126
+Command found but not executable.
+.TP
+.B 127
+Command not found.
+
+.SH ERROR MESSAGES
+Error messages are printed to
+.B stderr
+following this format:
+
+.PP
+.nf
+hsh: line_number: command: error_message
+.fi
+
+Examples:
+
+.PP
+.nf
+hsh: 3: aaa: not found
+hsh: 4: ./dir: Permission denied
+.fi
+
+.SH RESTRICTIONS
+
+don't support:
+.PP
+\- Complex command lines  
+\- Command separators (; , &&, ||)  
+\- Pipes (|)  
+\- Redirections (<, >)  
+\- Wildcards (*) or globbing  
+\- Environment variable expansion ($VAR)  
+\- Job control (&, fg, bg)  
+\- Aliasing or command history
 
 .SH AUTHOR
-Nicolas and Bengin
+
+Nicolas DA SILVA and Bengin UZUN
