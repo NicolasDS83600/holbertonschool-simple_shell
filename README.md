@@ -1,4 +1,4 @@
-## _SIMPLE_SHELL !
+## SIMPLE_SHELL !
 
 
 ## Description
@@ -60,13 +60,13 @@ Features
 
 ## Man page :
 
-<img src="image/man_simple_shell.png" width="400">
-<img src="image/man_simple_shell2.png" width="600">
+<img src="image/man1.png" width="600">
+<img src="image/man2.png" width="600">
 
 
 ## Flowchart :
 
-
+<img src="image/flowchart_shell.png" width="600">
 
 
 ## Files :
@@ -78,7 +78,7 @@ Features
 	- read_line.c : Reads a line of input from standard input
 	- display_prompt.c : Prints the shell prompt in the standard output
 	- execute_program.c : Forks a new process to execute a given program
-
+	- builtins.c : Handles the builtins commands
 
 ## Authors :
 
